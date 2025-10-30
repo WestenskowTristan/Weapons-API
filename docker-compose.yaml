@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15.0-alpine
+    mem_limit: 256M
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+  
+
+  weapons-api: 
+    build: 
+      context: .
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    environment:
+      ENVIRONMENT: dev
+      PORT: 80
+    ports:
+      - 80:80
+    
+  
+  tests:
+    build: 
+      context: .
+      target: test
+    links:
+      - postgres
+    environment:
+      ENVIRONMENT: dev
+      PORT: 80
